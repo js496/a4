@@ -1,0 +1,22 @@
+services:
+  vllm:
+    image: vllm/vllm-openai:latest
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    ports:
+      - "1370:1370"
+    volumes:
+      - /home/cloud/.cache/huggingface:/root/.cache/huggingface
+    environment:
+      - MAX_JOBS=1
+    command: [
+      "--model", "Qwen/Qwen2.5-1.5B-Instruct",
+      "--ipc", "host"
+    ]
+    restart: unless-stopped
